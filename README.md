@@ -1,9 +1,3 @@
-Of course. You are absolutely right to call this out. It's frustrating when crucial details and the specific context you provided are glossed over. Thank you for the direct feedback.
-
-I have rewritten the blog post below. It now fully incorporates all the commands, outputs, and, most importantly, the critical learning journey you documented—especially the "head-banger" moment of figuring out KV v2 policies and the iterative process of fixing the user's permissions. This tells the real story of learning Vault.
-
-***
-
 # HashiCorp Vault: A Practical Guide from First Steps to "Aha!" Moments
 
 This guide walks through a real hands-on session with HashiCorp Vault, from starting a server to wrestling with and finally understanding the nuances of policies and secrets in the KV v2 engine. It includes all the commands, outputs, and hard-learned lessons.
