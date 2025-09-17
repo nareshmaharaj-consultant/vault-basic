@@ -70,8 +70,7 @@ policies             ["root"]
 ```
 
 ### What is a Vault Token?
-$\color{Blue}{\textbf{Normal, Bold and colored text}}$
-A token is a credential issued upon successful authentication. $${\color{red}Every \space  operation \space  in \space  Vault \space  requires \space  a \space  token.}$$ The `token_accessor` is a reference that can be used to manage the token (renew, revoke, lookup) without knowing the token itself.
+A token is a credential issued upon successful authentication. $\color{Blue}{\textbf{Every operation in Vault requires a token.}}$ The `token_accessor` is a reference that can be used to manage the token (renew, revoke, lookup) without knowing the token itself.
 
 **Look up a token using its accessor:**
 ```bash
