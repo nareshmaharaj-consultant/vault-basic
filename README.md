@@ -1,4 +1,4 @@
-# HashiCorp Vault: A Practical Guide from First Steps to "Aha!" Moments
+# HashiCorp Vault: A Practical Guide from First Steps to "Aha!" Moments - Part 1
 
 This guide walks through a real hands-on session with HashiCorp Vault, from starting a server to wrestling with and finally understanding the nuances of policies and secrets in the KV v2 engine. It includes all the commands, outputs, and hard-learned lessons.
 
