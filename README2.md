@@ -1,4 +1,3 @@
-````markdown
 # The Alchemist's Vault: A Magical Guide to Dynamic Secrets and Encryption
 
 Welcome, aspiring security wizards! Today, we'll journey to the Grand Academy of Arcane Arts to solve a modern magical problem. We'll learn how to use the powerful magic of **HashiCorp Vault** to grant secure, temporary access to a secret database and perform powerful encryption without ever revealing the master keys.
@@ -242,6 +241,3 @@ Powdered Dragon's Tear
 ## The Spell is Complete
 
 And there you have it\! We successfully gave an application temporary, audited access to a database and the ability to perform powerful cryptography, all without a single long-lived password or encryption key ever being exposed. You've mastered two of the most powerful spells in the HashiCorp Vault grimoire: **Dynamic Secrets** and **Encryption as a Service**.
-
-```
-```
