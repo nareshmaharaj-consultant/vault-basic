@@ -12,10 +12,10 @@ Follow these guides in order to learn how to manage database credentials dynamic
 * **[Part 1: Dynamic Database Secrets](./part1.md)**
     * Learn how to configure Vault to dynamically generate temporary, on-demand credentials for a PostgreSQL database, eliminating the need for long-lived static passwords.
 
-* **[Part 2: Encryption as a Service](./02-encryption-as-a-service.md)**
+* **[Part 2: Encryption as a Service](./part2.md)**
     * Discover how to use Vault's Transit Secrets Engine to encrypt and decrypt sensitive data without ever exposing the encryption keys to your application.
 
-* **[Part 3: PKI and Mutual TLS (mTLS)](./03-pki-and-mtls.md)**
+* **[Part 3: PKI and Mutual TLS (mTLS)](./part3.md)**
     * Set up Vault as a Certificate Authority (CA) to issue TLS certificates for your PostgreSQL server and clients, enabling a secure, passwordless, and verifiable mTLS connection.
 
 ---
