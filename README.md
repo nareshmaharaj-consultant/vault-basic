@@ -9,7 +9,7 @@ The goal is to provide practical, step-by-step examples of how to solve real-wor
 
 Follow these guides in order to learn how to manage database credentials dynamically, perform encryption as a service, and establish a secure, certificate-based mTLS connection to PostgreSQL.
 
-* **[Part 1: Dynamic Database Secrets](./01-dynamic-secrets.md)**
+* **[Part 1: Dynamic Database Secrets](./part1.md)**
     * Learn how to configure Vault to dynamically generate temporary, on-demand credentials for a PostgreSQL database, eliminating the need for long-lived static passwords.
 
 * **[Part 2: Encryption as a Service](./02-encryption-as-a-service.md)**
