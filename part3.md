@@ -20,7 +20,8 @@ Before you begin, ensure you have the following tools installed:
 
 ### 1.1. Prepare the PostgreSQL Database
 
-First, we'll create our PostgreSQL instance using Docker Compose. This also includes a helpful pgAdmin interface.
+If you haven't already created the postgresql database in part 2, here it is again. 
+Create our PostgreSQL instance using Docker Compose.
 
 Save the following as `compose.yml`:
 ```yaml
@@ -63,6 +64,7 @@ docker-compose up -d
 
 ### 1.2. Create and Configure the "Grand Grimoire" Database
 
+We already did this is previous section (part2) but here it is again.
 Connect to the running instance and set up our database, table, and a dedicated role for read-only access.
 
 ```bash
@@ -109,7 +111,7 @@ With the database ready, we'll now configure Vault to act as the CA for our acad
 vault server -dev
 
 # Set your VAULT_ADDR and VAULT_TOKEN environment variables from the output above
-export VAULT_ADDR='[http://127.0.0.1:8200](http://127.0.0.1:8200)'
+export VAULT_ADDR='export VAULT_ADDR='https://127.0.0.1:8200'
 export VAULT_TOKEN='...'
 
 # Enable the PKI secrets engine
@@ -118,7 +120,7 @@ vault secrets enable pki
 # Tune the root CA's max lease to 10 years
 vault secrets tune -max-lease-ttl=87600h pki
 
-# Generate the root certificate, saving it to a file
+# Generate the root certificate, saving it to a file just for reference only. We wont actually use AcademyCA.crt.
 vault write -field=certificate pki/root/generate/internal \
     common_name="Grand Academy CA" \
     ttl=87600h > AcademyCA.crt
@@ -292,7 +294,4 @@ sslcert=$(pwd)/appuser-certs/client-appuser.crt \
 sslkey=$(pwd)/appuser-certs/client-appuser.key \
 sslrootcert=$(pwd)/appuser-certs/ca.crt"
 ```
-
 Success\! You are now connected as `appuser`, which can read the `recipes` table by inheriting permissions from its group role, all authenticated over a secure mTLS connection.
-
-```
