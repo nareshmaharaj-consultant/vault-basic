@@ -1,8 +1,3 @@
-Of course. Here is a `README.md` file that introduces your project and links to the three tutorial files in your repository.
-
------
-
-```markdown
 # Vault Demo: Dynamic Secrets & PKI with PostgreSQL 🧙‍♂️
 
 Welcome to the Alchemist's Vault! This repository contains a series of hands-on tutorials that walk you through some of the most powerful features of HashiCorp Vault, all told through the story of a magical school, its secret-filled database, and an apprentice named Pip.
@@ -31,4 +26,3 @@ To follow along with these tutorials, you will need the following tools installe
 * HashiCorp Vault CLI
 * PostgreSQL Client (`psql`)
 * `jq` (a command-line JSON processor)
-```
