@@ -111,7 +111,7 @@ With the database ready, we'll now configure Vault to act as the CA for our acad
 vault server -dev
 
 # Set your VAULT_ADDR and VAULT_TOKEN environment variables from the output above
-export VAULT_ADDR='export VAULT_ADDR='https://127.0.0.1:8200'
+export VAULT_ADDR='https://127.0.0.1:8200'
 export VAULT_TOKEN='...'
 
 # Enable the PKI secrets engine
