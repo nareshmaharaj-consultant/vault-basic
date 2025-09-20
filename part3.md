@@ -295,3 +295,144 @@ sslkey=$(pwd)/appuser-certs/client-appuser.key \
 sslrootcert=$(pwd)/appuser-certs/ca.crt"
 ```
 Success\! You are now connected as `appuser`, which can read the `recipes` table by inheriting permissions from its group role, all authenticated over a secure mTLS connection.
+
+-----
+
+## Update: Creating a Stable Network with Docker Compose
+
+To create a more robust and production-like environment, it's better to give our PostgreSQL container a stable hostname. This is the key to issuing correct TLS certificates and makes it easier for other services to find the database.
+
+### Step 1: Update Your `docker-compose.yml`
+
+We will add a `hostname` (`grimoire`), define a custom `network`, and mount our configuration and certificate files directly as `volumes`. This avoids manually copying files into the container.
+
+First, create a local folder named `postgres-config` and place your `postgresql.conf` and `pg_hba.conf` files inside it. Also, create a `server-certs` folder for the certificates we will generate.
+
+```yaml
+services:
+  postgres:
+    container_name: container-pg
+    image: postgres
+    hostname: grimoire    # <-- Give the container a stable hostname
+    networks:             # <-- This connects it to the network for DNS
+      - magic-net
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: test_db
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      # Mount config files from your local machine
+      - ./postgres-config/postgresql.conf:/etc/postgresql/postgresql.conf
+      - ./postgres-config/pg_hba.conf:/etc/postgresql/pg_hba.conf
+      # Mount server certificates from your local machine
+      - ./server-certs:/etc/postgresql/certs
+    command: >
+      -c 'config_file=/etc/postgresql/postgresql.conf'
+      -c 'hba_file=/etc/postgresql/pg_hba.conf'
+    restart: unless-stopped
+
+  pgadmin:
+    container_name: container-pgadmin
+    image: dpage/pgadmin4
+    depends_on:
+      - postgres
+    networks:
+      - magic-net
+    ports:
+      - "5050:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: root
+    restart: unless-stopped
+
+volumes:
+  postgres-data:
+
+# Define the custom network
+networks:
+  magic-net:
+```
+
+You must also update your `postgres-config/postgresql.conf` file to point to the new certificate location inside the container:
+
+```ini
+# Inside postgres-config/postgresql.conf
+ssl_cert_file = '/etc/postgresql/certs/server.crt'
+ssl_key_file = '/etc/postgresql/certs/server.key'
+ssl_ca_file = '/etc/postgresql/certs/ca.crt'
+```
+
+### Step 2: Re-issue the Server Certificate for the New Hostname
+
+Your server certificate must be valid for the new hostname, `grimoire`. First, update your Vault PKI role to allow `grimoire` as a valid domain.
+
+```bash
+vault write pki/roles/apprentice-role \
+    allowed_domains="grimoire,academy.local,admin,appuser" \
+    allow_subdomains=true \
+    allow_bare_domains=true \
+    max_ttl="1h"
+```
+
+Now, issue the new server certificate.
+
+```bash
+vault write -format=json pki/issue/apprentice-role \
+    common_name="grimoire" \
+    alt_names="localhost" \
+    ip_sans="127.0.0.1" > postgres-cert.json
+
+mkdir -p server-certs
+jq -r .data.private_key < postgres-cert.json > server-certs/server.key
+jq -r .data.certificate < postgres-cert.json > server-certs/server.crt
+jq -r .data.issuing_ca < postgres-cert.json > server-certs/ca.crt
+chmod 600 server-certs/server.key
+```
+
+With the new certificate in `./server-certs` and the updated `docker-compose.yml`, you can now run `docker-compose up -d --force-recreate`. Your PostgreSQL server will start with a stable hostname and the correct configuration.
+
+### The Achievement: Why This is Better
+
+  * **A Stable Identity for TLS** 🛡️: Your PostgreSQL server is now always known as `grimoire`. Because it has a stable name, you can issue a server certificate with `common_name="grimoire"`, which acts as its official, verifiable ID card.
+  * **Correct Certificate Verification** ✅: Clients can now connect securely with `sslmode=verify-full`. When a client connects to `host=grimoire`, the server presents its certificate, and the names match. This crucial security check prevents man-in-the-middle attacks.
+
+### Example: Onboarding a New `loguser`
+
+This setup makes it easy to add new users.
+
+**1. Create the Vault PKI Role**
+
+```bash
+vault write pki/roles/log-role \
+    allowed_domains="loguser" \
+    allow_bare_domains=true \
+    max_ttl="15m"
+```
+
+**2. Issue the Certificate**
+
+```bash
+vault write -format=json pki/issue/log-role \
+    common_name="loguser" \
+    alt_names="localhost" \
+    ip_sans="127.0.0.1" > loguser-certs.json
+
+mkdir -p loguser-certs
+jq -r .data.private_key < loguser-certs.json > loguser-certs/client-loguser.key
+jq -r .data.certificate < loguser-certs.json > loguser-certs/client-loguser.crt
+jq -r .data.issuing_ca  < loguser-certs.json > loguser-certs/ca.crt
+chmod 600 loguser-certs/client-loguser.key
+```
+
+**3. Connect (after creating the `loguser` role in PostgreSQL)**
+
+```bash
+psql "host=localhost dbname=grand_grimoire user=loguser \
+    sslmode=verify-full \
+    sslcert=$(pwd)/loguser-certs/client-loguser.crt \
+    sslkey=$(pwd)/loguser-certs/client-loguser.key \
+    sslrootcert=$(pwd)/loguser-certs/ca.crt"
+```
