@@ -1,4 +1,4 @@
-# Securing the Grand Grimoire: A Guide to Vault PKI and PostgreSQL mTLS
+# Securing the Grand Grimoire: A Guide to Vault PKI and PostgreSQL mTLS - Part 3
 
 This document details the process of securing a PostgreSQL database using Mutual TLS (mTLS), where both the server and the clients must present valid, trusted certificates to establish a connection. We will use HashiCorp Vault as our Certificate Authority (CA) to dynamically issue all necessary certificates.
 
