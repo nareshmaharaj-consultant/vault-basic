@@ -242,8 +242,5 @@ Powdered Dragon's Tear
 
 And there you have it\! We successfully gave an application temporary, audited access to a database and the ability to perform powerful cryptography, all without a single long-lived password or encryption key ever being exposed. You've mastered two of the most powerful spells in the HashiCorp Vault grimoire: **Dynamic Secrets** and **Encryption as a Service**.
 
-> **[Part 1: Dynamic Database Secrets](./part1.md)**
-    - Learn how to configure Vault to dynamically generate temporary, on-demand credentials for a PostgreSQL database, eliminating the need for long-lived static passwords.
-
 > **[Part 3: PKI and Mutual TLS (mTLS)](./part3.md)**
     - Set up Vault as a Certificate Authority (CA) to issue TLS certificates for your PostgreSQL server and clients, enabling a secure, passwordless, and verifiable mTLS connection.
