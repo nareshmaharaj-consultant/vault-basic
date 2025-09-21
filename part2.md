@@ -107,12 +107,12 @@ INSERT INTO recipes VALUES (1, 'Elixir of Invisibility', 'Moon dust, shadow esse
 
 With the Grimoire ready, Headmaster Alistair can now configure the Vault.
 
-#### 1\. Teach Vault about the Database
+#### 1\. Tell Vault about the Database
 
 First, we enable Vault's database secrets engine and teach it how to connect to our Grimoire as the powerful `admin` user.
 
 ```bash
-# Start a Vault dev server in a new terminal and set your VAULT_TOKEN
+# Start a Vault dev server in a new terminal and set your VAULT_TOKEN, you may have done this already in Part 1.
 vault server -dev
 
 # Enable the database secrets engine
@@ -158,7 +158,7 @@ vault write -f encryption_rune/keys/potion-sealing-key
 
 ## Act II: Apprentice Pip's Quest 🤖
 
-Now, we switch hats to Apprentice Pip's automated script. The script has been given a short-lived Vault token to perform its tasks.
+Now, we switch hats to Apprentice Pip's database engineering skills.. The script has been given a short-lived Vault token to perform its tasks.
 
 ### 1\. Request Temporary Database Credentials
 
@@ -240,7 +240,7 @@ Powdered Dragon's Tear
 
 ## The Spell is Complete
 
-And there you have it\! We successfully gave an application temporary, audited access to a database and the ability to perform powerful cryptography, all without a single long-lived password or encryption key ever being exposed. You've mastered two of the most powerful spells in the HashiCorp Vault grimoire: **Dynamic Secrets** and **Encryption as a Service**.
+And there you have it\! We successfully gave Pip time limited and audited access to a database with the ability to perform powerful cryptography, all without a single long-lived password or encryption key ever being exposed. You've mastered two of the most powerful spells in the HashiCorp Vault grimoire: **Dynamic Secrets** and **Encryption as a Service**.
 
 > **[Part 3: PKI and Mutual TLS (mTLS)](./part3.md)**
     - Set up Vault as a Certificate Authority (CA) to issue TLS certificates for your PostgreSQL server and clients, enabling a secure, passwordless, and verifiable mTLS connection.
