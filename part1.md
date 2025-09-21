@@ -78,7 +78,7 @@ vault token lookup -accessor d2UhKlFeQfKvwFPRqNkWSfML
 ```
 
 ### Creating Tokens with Different Properties
-Root is powerful; you create limited tokens for specific use cases.
+Root is powerful, so you would be advised to create limited tokens for specific use cases.
 
 **1. Basic Token with Short TTL:**
 ```bash
@@ -327,3 +327,6 @@ After this final update and a new login, the user `naresh` could successfully li
 5.  **Expect Permission Issues:** A `403` error almost always means your policy is missing a capability on a specific path. Use the error message to see what path was being accessed and adjust your policy accordingly.
 
 This journey from a basic server setup through debugging policy errors encapsulates the core experience of getting started with Vault. The key is understanding the relationship between auth methods, tokens, policies, and the specific API structure of the secrets engines you use.
+
+* **[Part 2: Encryption as a Service](./part2.md)**
+    * Discover how to use Vault's Transit Secrets Engine to encrypt and decrypt sensitive data without ever exposing the encryption keys to your application.

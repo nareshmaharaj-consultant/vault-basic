@@ -1,4 +1,4 @@
-# The Alchemist's Vault: A Magical Guide to Dynamic Secrets and Encryption
+# The Alchemist's Vault: A Magical Guide to Dynamic Secrets and Encryption - Part 2
 
 Welcome, aspiring security wizards! Today, we'll journey to the Grand Academy of Arcane Arts to solve a modern magical problem. We'll learn how to use the powerful magic of **HashiCorp Vault** to grant secure, temporary access to a secret database and perform powerful encryption without ever revealing the master keys.
 
