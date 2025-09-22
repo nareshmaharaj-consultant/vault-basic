@@ -117,10 +117,10 @@ export VAULT_TOKEN='...'
 # Enable the PKI secrets engine
 vault secrets enable pki
 
-# Tune the root CA's max lease to 10 years
-vault secrets tune -max-lease-ttl=87600h pki
+# Tune the root CA's max lease to 10 years & override the default lease issued to 1 year
+vault secrets tune -max-lease-ttl=87600h -default-lease-ttl=8760h pki
 
-# Generate the root certificate, saving it to a file just for reference only. We wont actually use AcademyCA.crt.
+# Generate the root certificate, saving it to a file max ttl is 10 years.
 vault write -field=certificate pki/root/generate/internal \
     common_name="Grand Academy CA" \
     ttl=87600h > AcademyCA.crt
@@ -136,12 +136,12 @@ vault write pki/config/urls \
     issuing_certificates="$VAULT_ADDR/v1/pki/ca" \
     crl_distribution_points="$VAULT_ADDR/v1/pki/crl"
 
-# Create a flexible role for our various users and services
+# Create a flexible role for our various users and services with max lease of 1 year
 vault write pki/roles/apprentice-role \
     allowed_domains="academy.local,admin,appuser" \
     allow_subdomains=true \
     allow_bare_domains=true \
-    max_ttl="1h"
+    max_ttl="8760h"
 
 # Create a dedicated, more privileged role for the admin user
 vault write pki/roles/admin-role \
