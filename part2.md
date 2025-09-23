@@ -242,5 +242,7 @@ Powdered Dragon's Tear
 
 And there you have it\! We successfully gave Pip a time limited (ttl) and audited access to a database with the ability to perform powerful cryptography, all without a single long-lived password or encryption key ever being exposed. You've mastered two of the most powerful spells in the HashiCorp Vault grimoire: **Dynamic Secrets** and **Encryption as a Service**.
 
+## Next..
+
 > **[Part 3: PKI and Mutual TLS (mTLS)](./part3.md)**
     - Set up Vault as a Certificate Authority (CA) to issue TLS certificates for your PostgreSQL server and clients, enabling a secure, passwordless, and verifiable mTLS connection.

@@ -437,5 +437,7 @@ psql "host=localhost dbname=grand_grimoire user=loguser \
     sslrootcert=$(pwd)/loguser-certs/ca.crt"
 ```
 
+## Next..
+
 > **[Part 4: A Secure Web Server Python API with TDD](./part4.md)**
     * Fetch a new spell from a Python REST API that can dynamically generate its own certificate. This application is written using a Test-Driven Development (TDD) approach.
