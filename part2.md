@@ -238,6 +238,38 @@ Powdered Dragon's Tear
 
 -----
 
+If you ever want to query what encryption keys exist run the following list and read commands in vault.
+
+```bash
+vault list encryption_rune/keys
+Keys
+----
+potion-sealing-key
+
+then..
+
+vault read encryption_rune/keys/potion-sealing-key
+Key                       Value
+---                       -----
+allow_plaintext_backup    false
+auto_rotate_period        0s
+deletion_allowed          false
+derived                   false
+exportable                false
+imported_key              false
+keys                      map[1:1758201704]
+latest_version            1
+min_available_version     0
+min_decryption_version    1
+min_encryption_version    0
+name                      potion-sealing-key
+supports_decryption       true
+supports_derivation       true
+supports_encryption       true
+supports_signing          false
+type                      aes256-gcm96
+```
+
 ## The Spell is Complete
 
 And there you have it\! We successfully gave Pip a time limited (ttl) and audited access to a database with the ability to perform powerful cryptography, all without a single long-lived password or encryption key ever being exposed. You've mastered two of the most powerful spells in the HashiCorp Vault grimoire: **Dynamic Secrets** and **Encryption as a Service**.
