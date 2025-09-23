@@ -328,7 +328,7 @@ After this final update and a new login, the user `naresh` could successfully li
 
 This journey from a basic server setup through debugging policy errors encapsulates the core experience of getting started with Vault. The key is understanding the relationship between auth methods, tokens, policies, and the specific API structure of the secrets engines you use.
 
-## Next
+## Next..
 
 > **[Part 2: Encryption as a Service](./part2.md)**
      - Discover how to use Vault's Transit Secrets Engine to encrypt and decrypt sensitive data without ever exposing the encryption keys to your application.
