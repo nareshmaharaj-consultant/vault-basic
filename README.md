@@ -18,6 +18,9 @@ Follow these guides in order to learn how to manage database credentials dynamic
 * **[Part 3: PKI and Mutual TLS (mTLS)](./part3.md)**
     * Set up Vault as a Certificate Authority (CA) to issue TLS certificates for your PostgreSQL server and clients, enabling a secure, passwordless, and verifiable mTLS connection.
 
+* **[Part 4: A Secure Web Server Python API with TDD](./part4.md)**
+    * Fetch a new spell from a Python REST API that can dynamically generate its own certificate. This application is written using a Test-Driven Development (TDD) approach.
+
 ---
 ### Prerequisites
 
