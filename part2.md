@@ -337,17 +337,17 @@ echo "--> Encrypting chunks..."
 > "$CIPHERTEXT_FILE"
 for chunk in "$CHUNK_DIR"/chunk_*; do
   # Capture ciphertext and echo it to the file to ensure a newline is added
-  ciphertext=$(base64 "$chunk" | vault write -field=ciphertext "$KEY_PATH" plaintext=-)
+  ciphertext=$(base64 -i "$chunk" | vault write -field=ciphertext "$KEY_PATH" plaintext=-)
   echo "$ciphertext" >> "$CIPHERTEXT_FILE"
 done
 
 # 4. Clean up the chunks directory
 rm -rf "$CHUNK_DIR"
 
-echo "✅ Success! Encrypted data saved to '$CIPHERTEXT_FILE'"
+echo "Success! Encrypted data saved to '$CIPHERTEXT_FILE'"
 ```
 
-> **Note on `base64`:** The `base64` command can have different flags on different systems. The version above works on most Linux distributions. On macOS, you might need `base64 -i "$chunk"`.
+> **Note on `base64`:** The `base64` command can have different flags on different systems. On macOS, you might need `base64 -i "$chunk"`.
 
 With the spell prepared, we run it on Greta’s grimoire:
 
@@ -388,14 +388,14 @@ echo "--> Decrypting chunks from '$CIPHERTEXT_FILE'..."
 > "$RESTORED_FILE"
 while read -r ciphertext; do
   if [ -n "$ciphertext" ]; then
-    echo "$ciphertext" | vault write -field=plaintext "$KEY_PATH" ciphertext=- | base64 --decode >> "$RESTORED_FILE"
+    echo "$ciphertext" | vault write -field=plaintext "$KEY_PATH" ciphertext=- | base64 -d >> "$RESTORED_FILE"
   fi
 done < "$CIPHERTEXT_FILE"
 
-echo "✅ Success! Restored file saved to '$RESTORED_FILE'"
+echo "Success! Restored file saved to '$RESTORED_FILE'"
 ```
 
-> **Note on `base64`:** The flag for decoding is typically `--decode` or `-d`. On macOS, it's `-D`.
+> **Note on `base64`:** The flag for decoding is typically `--decode` or `-d`. On macOS, it's `-d`.
 
 We execute the decryption script:
 
