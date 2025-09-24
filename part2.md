@@ -274,6 +274,159 @@ type                      aes256-gcm96
 
 And there you have it\! We successfully gave Pip a time limited (ttl) and audited access to a database with the ability to perform powerful cryptography, all without a single long-lived password or encryption key ever being exposed. You've mastered two of the most powerful spells in the HashiCorp Vault grimoire: **Dynamic Secrets** and **Encryption as a Service**.
 
+Of course\! Here is the story of Pip and Greta, formatted as a blog post in Markdown.
+
+-----
+
+# Pip's Guide to Encrypting Large Spellbooks with Vault
+
+*By Pip, the Scripter Sorceress*
+*24 September 2025*
+
+One crisp morning in Buckhurst Hill, my friend Greta the Enchanter came to me with a problem. She had just finished digitising her prized possession: a colossal, ancient spellbook. The resulting grimoire file was over a gigabyte, and she needed to store it securely in our shared Vault.
+
+"Pip," she said, looking worried, "I tried to encrypt the grimoire, but Vault threw a fit\! It complained the file was too large. How can I protect my spells?"
+
+She was right. Vault, for its own safety and stability, has a limit on the size of a single secret it can process in one go. But fear not\! I showed her a powerful piece of scripting magic called **"chunking"**.
+
+The idea is simple: instead of trying to enchant the entire massive book at once, we first break it down into hundreds of smaller, manageable pages. We then encrypt each page individually and bundle the encrypted pages together. To read the book again, we simply reverse the process.
+
+Here’s the step-by-step enchantment we used.
+
+-----
+
+## The Encryption Spell: Breaking Down the Grimoire
+
+First, we need to confirm the identity of our grimoire file using a checksum. This ensures that after we decrypt it, we get the exact same file back.
+
+```bash
+$ ls -lh pycharm-2025.2.1.1-aarch64.dmg
+-rw-r--r--@ 1 user  staff   1.2G 23 Sep 16:38 pycharm-2025.2.1.1-aarch64.dmg
+
+$ md5sum pycharm-2025.2.1.1-aarch64.dmg
+ac6e182ed0979f090b1a9a0ad4148c1f  pycharm-2025.2.1.1-aarch64.dmg
+```
+
+Now, we can prepare our encryption script.
+
+### The `encrypt.sh` Script
+
+This script takes one argument: the name of the file you want to encrypt.
+
+```bash
+#!/bin/bash
+
+# --- Configuration ---
+FILE_TO_ENCRYPT=$1
+# The path to your transit key in Vault
+KEY_PATH="encryption_rune/encrypt/potion-sealing-key"
+CIPHERTEXT_FILE="encrypted_bundle.txt"
+CHUNK_DIR="temp_chunks"
+
+# 1. Create a temporary directory for chunks
+mkdir -p "$CHUNK_DIR"
+
+# 2. Split the large file into 512KB chunks
+echo "--> Splitting '$FILE_TO_ENCRYPT' into 512Kb chunks..."
+# The -d and -a 4 flags allow for up to 10,000 numeric file chunks (e.g., chunk_0000)
+split -b 512k -d -a 4 "$FILE_TO_ENCRYPT" "$CHUNK_DIR/chunk_"
+
+# 3. Encrypt each chunk and append the ciphertext to a single file
+echo "--> Encrypting chunks..."
+# Clear the output file before starting
+> "$CIPHERTEXT_FILE"
+for chunk in "$CHUNK_DIR"/chunk_*; do
+  # Capture ciphertext and echo it to the file to ensure a newline is added
+  ciphertext=$(base64 "$chunk" | vault write -field=ciphertext "$KEY_PATH" plaintext=-)
+  echo "$ciphertext" >> "$CIPHERTEXT_FILE"
+done
+
+# 4. Clean up the chunks directory
+rm -rf "$CHUNK_DIR"
+
+echo "✅ Success! Encrypted data saved to '$CIPHERTEXT_FILE'"
+```
+
+> **Note on `base64`:** The `base64` command can have different flags on different systems. The version above works on most Linux distributions. On macOS, you might need `base64 -i "$chunk"`.
+
+With the spell prepared, we run it on Greta’s grimoire:
+
+```bash
+chmod +x encrypt.sh
+./encrypt.sh pycharm-2025.2.1.1-aarch64.dmg
+```
+
+**Output:**
+
+```
+--> Splitting 'pycharm-2025.2.1.1-aarch64.dmg' into 512Kb chunks...
+--> Encrypting chunks...
+✅ Success! Encrypted data saved to 'encrypted_bundle.txt'
+```
+
+-----
+
+## The Decryption Counter-Spell: Reassembling the Book
+
+Now that the encrypted pages are bundled in `encrypted_bundle.txt`, Greta needs a way to read her book. This requires a counter-spell to decrypt each page and stitch them back together in the correct order.
+
+### The `decrypt.sh` Script
+
+```bash
+#!/bin/bash
+
+# --- Configuration ---
+CIPHERTEXT_FILE="encrypted_bundle.txt"
+# Note the 'decrypt' path for the key
+KEY_PATH="encryption_rune/decrypt/potion-sealing-key"
+RESTORED_FILE="decrypted_grimoire.out"
+
+# 1. Read the ciphertext file line by line
+echo "--> Decrypting chunks from '$CIPHERTEXT_FILE'..."
+
+# Clear the output file before starting
+> "$RESTORED_FILE"
+while read -r ciphertext; do
+  if [ -n "$ciphertext" ]; then
+    echo "$ciphertext" | vault write -field=plaintext "$KEY_PATH" ciphertext=- | base64 --decode >> "$RESTORED_FILE"
+  fi
+done < "$CIPHERTEXT_FILE"
+
+echo "✅ Success! Restored file saved to '$RESTORED_FILE'"
+```
+
+> **Note on `base64`:** The flag for decoding is typically `--decode` or `-d`. On macOS, it's `-D`.
+
+We execute the decryption script:
+
+```bash
+chmod +x decrypt.sh
+./decrypt.sh
+```
+
+**Output:**
+
+```
+--> Decrypting chunks from 'encrypted_bundle.txt'...
+✅ Success! Restored file saved to 'decrypted_grimoire.out'
+```
+
+-----
+
+## Verifying the Magic
+
+The final, crucial step is to ensure the reassembled grimoire is a perfect copy of the original. We use the same checksum spell as before.
+
+```bash
+$ md5sum decrypted_grimoire.out
+ac6e182ed0979f090b1a9a0ad4148c1f  decrypted_grimoire.out
+```
+
+The checksums match\! Greta’s massive spellbook was successfully protected and restored using the power of Vault and a little bit of scripting magic. This chunking method can be used to protect any large file, no matter its size.
+
+Happy enchanting\!
+
+\-Pip
 ## Next..
 
 > **[Part 3: PKI and Mutual TLS (mTLS)](./part3.md)**
