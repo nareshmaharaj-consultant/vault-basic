@@ -361,7 +361,7 @@ chmod +x encrypt.sh
 ```
 --> Splitting 'pycharm-2025.2.1.1-aarch64.dmg' into 512Kb chunks...
 --> Encrypting chunks...
-✅ Success! Encrypted data saved to 'encrypted_bundle.txt'
+Success! Encrypted data saved to 'encrypted_bundle.txt'
 ```
 
 -----
@@ -408,7 +408,7 @@ chmod +x decrypt.sh
 
 ```
 --> Decrypting chunks from 'encrypted_bundle.txt'...
-✅ Success! Restored file saved to 'decrypted_grimoire.out'
+Success! Restored file saved to 'decrypted_grimoire.out'
 ```
 
 -----
