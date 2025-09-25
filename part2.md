@@ -320,7 +320,7 @@ This script takes one argument: the name of the file you want to encrypt.
 FILE_TO_ENCRYPT=$1
 # The path to your transit key in Vault
 KEY_PATH="encryption_rune/encrypt/potion-sealing-key"
-CIPHERTEXT_FILE="encrypted_bundle.txt"
+CIPHERTEXT_FILE="encrypted_bundle.out"
 CHUNK_DIR="temp_chunks"
 
 # 1. Create a temporary directory for chunks
@@ -373,13 +373,10 @@ Now that the encrypted pages are bundled in `encrypted_bundle.txt`, Greta needs 
 ### The `decrypt.sh` Script
 
 ```bash
-#!/bin/bash
-
 # --- Configuration ---
-CIPHERTEXT_FILE="encrypted_bundle.txt"
-# Note the 'decrypt' path for the key
+CIPHERTEXT_FILE="encrypted_bundle.out"
 KEY_PATH="encryption_rune/decrypt/potion-sealing-key"
-RESTORED_FILE="decrypted_grimoire.out"
+RESTORED_FILE=decrypted_bundle.out
 
 # 1. Read the ciphertext file line by line
 echo "--> Decrypting chunks from '$CIPHERTEXT_FILE'..."
@@ -438,7 +435,7 @@ The following will detect the number of cores on the system and use the same num
 # --- Configuration ---
 FILE_TO_ENCRYPT=$1
 KEY_PATH="encryption_rune/encrypt/potion-sealing-key"
-CIPHERTEXT_FILE="encrypted_bundle.txt"
+CIPHERTEXT_FILE="encrypted_bundle.out"
 CHUNK_DIR="temp_chunks"
 # Create a separate directory for the encrypted chunks
 ENCRYPTED_CHUNK_DIR="temp_encrypted_chunks"
