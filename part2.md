@@ -428,9 +428,9 @@ Happy enchanting\!
 
 \-Pip
 
-## Bonus Encryption Parallelism
+## Bonus: Encryption Parallelism
 
-The following will detect the mumber of core on the system and use the same number of parallel threads. Jobs will be completed in any order but files names are sortable.
+The following will detect the number of cores on the system and use the same number of parallel threads. Jobs will be completed in any order but files names are sortable.
 
 ```bash
 #!/bin/bash
