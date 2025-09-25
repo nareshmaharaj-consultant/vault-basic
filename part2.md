@@ -427,6 +427,63 @@ The checksums match\! Greta’s massive spellbook was successfully protected and
 Happy enchanting\!
 
 \-Pip
+
+## Bonus Encryption Parallelism
+
+The following will detect the mumber of core on the system and use the same number of parallel threads. Jobs will be completed in any order but files names are sortable.
+
+```bash
+#!/bin/bash
+
+# --- Configuration ---
+FILE_TO_ENCRYPT=$1
+KEY_PATH="encryption_rune/encrypt/potion-sealing-key"
+CIPHERTEXT_FILE="encrypted_bundle.txt"
+CHUNK_DIR="temp_chunks"
+# Create a separate directory for the encrypted chunks
+ENCRYPTED_CHUNK_DIR="temp_encrypted_chunks"
+PARALLEL_JOBS=$(nproc 2>/dev/null || sysctl -n hw.ncpu)
+
+# This function encrypts a single chunk and saves its output to a corresponding file
+encrypt_chunk() {
+  input_chunk=$1
+  # Get just the filename (e.g., chunk_0001)
+  base_name=$(basename "$input_chunk")
+  output_file="$ENCRYPTED_CHUNK_DIR/$base_name.enc"
+
+  ciphertext=$(base64 -i"$input_chunk" | vault write -field=ciphertext "$KEY_PATH" plaintext=-)
+  echo "$ciphertext" > "$output_file"
+}
+
+export KEY_PATH ENCRYPTED_CHUNK_DIR
+export -f encrypt_chunk
+
+# 1. Setup
+echo "--> Preparing for parallel encryption with $PARALLEL_JOBS jobs..."
+mkdir -p "$CHUNK_DIR"
+mkdir -p "$ENCRYPTED_CHUNK_DIR"
+
+# 2. Split the file
+echo "--> Splitting '$FILE_TO_ENCRYPT' into 512Kb chunks..."
+split -b 512k -d -a 4 "$FILE_TO_ENCRYPT" "$CHUNK_DIR/chunk_"
+
+# 3. Encrypt in Parallel
+echo "--> Encrypting chunks in parallel..."
+find "$CHUNK_DIR" -type f | sort | xargs -P "$PARALLEL_JOBS" -I {} bash -c 'encrypt_chunk "{}"'
+
+# 4. Assemble the Final File IN ORDER
+echo "--> Assembling final encrypted bundle..."
+# Find the encrypted chunks, sort them, and concatenate them into the final file
+find "$ENCRYPTED_CHUNK_DIR" -type f | sort | xargs cat > "$CIPHERTEXT_FILE"
+
+# 5. Cleanup
+echo "--> Cleaning up temporary files..."
+rm -rf "$CHUNK_DIR"
+rm -rf "$ENCRYPTED_CHUNK_DIR"
+
+echo "Success! Encrypted data saved to '$CIPHERTEXT_FILE'"
+```
+
 ## Next..
 
 > **[Part 3: PKI and Mutual TLS (mTLS)](./part3.md)**
